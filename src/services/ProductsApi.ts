@@ -1,15 +1,64 @@
-import { Product } from "../types";
+import { Product } from '../types'
+import { AxiosError, create } from 'axios'
+import * as SecureStore from 'expo-secure-store'
+import { normalizeError } from '../api/error'
+
+interface DummyJsonProduct {
+  id: number
+  title: string
+  description: string
+  price: number
+  thumbnail: string
+  category: string
+  rating: number
+}
+
+interface DummyJsonResponse {
+  products: DummyJsonProduct[]
+  total: number
+  skip: number
+  limit: number
+}
+const api = create({
+  baseURL: 'https://dummyjson.com',
+  timeout: 10000,
+})
+
+api.interceptors.request.use(
+  async config => {
+    config.headers.set('X-Request-Time', new Date().toISOString())
+    config.headers.set('X-Client', 'android-app')
+
+    const token = await SecureStore.getItemAsync('access_token')
+    if (token) {
+      config.headers.set('Authorization', `Bearer ${token}`)
+    }
+
+    return config
+  },
+  error => Promise.reject(error),
+)
+
+api.interceptors.response.use(
+  response => response.data,
+  async (error: AxiosError) => {
+    const normalized = normalizeError(error)
+
+    if (normalized.status === 401) {
+      await SecureStore.deleteItemAsync('access_token')
+    }
+    throw normalized
+  },
+)
 
 export async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch("https://dummyjson.com/products?limit=100");
+  const { data } = await api.get<DummyJsonResponse>('/products', { params: { limit: 100 } })
 
-  if (!res.ok) {
-    throw new Error("Couldn't load products");
+  if (!data?.products) {
+    throw new Error("Couldn't load products")
   }
 
-  const json = await res.json();
-
-  return json.products.map((p: any) => ({
+  return data.products.map(p => ({
     id: p.id,
     title: p.title,
     description: p.description,
@@ -17,5 +66,5 @@ export async function fetchProducts(): Promise<Product[]> {
     image: p.thumbnail,
     category: p.category,
     rating: p.rating,
-  }));
+  }))
 }

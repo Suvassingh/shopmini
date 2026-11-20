@@ -1,30 +1,26 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, useState, type ReactNode } from 'react'
 
 type FavoritesContextType = {
-  ids: number[];
-  addFavorite: (id: number) => void;
-  removeFavorite: (id: number) => void;
-};
+  ids: number[]
+  addFavorite: (id: number) => void
+  removeFavorite: (id: number) => void
+}
 
 export const FavoritesContext = createContext<FavoritesContextType>({
   ids: [],
   addFavorite: () => {},
   removeFavorite: () => {},
-});
+})
 
-export default function FavoritesContextProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const [favoritesIds, setFavoritesIds] = useState<number[]>([]);
+export default function FavoritesContextProvider({ children }: { children: ReactNode }) {
+  const [favoritesIds, setFavoritesIds] = useState<number[]>([])
 
   function addFavorites(id: number) {
-    setFavoritesIds((cur) => (cur.includes(id) ? cur : [...cur, id]));
+    setFavoritesIds(cur => (cur.includes(id) ? cur : [...cur, id]))
   }
 
   function removeFavorites(id: number) {
-    setFavoritesIds((cur) => cur.filter((x) => x !== id));
+    setFavoritesIds(cur => cur.filter(x => x !== id))
   }
 
   return (
@@ -37,5 +33,5 @@ export default function FavoritesContextProvider({
     >
       {children}
     </FavoritesContext.Provider>
-  );
+  )
 }

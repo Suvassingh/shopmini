@@ -1,23 +1,17 @@
-import {
-  Pressable,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  GestureResponderEvent,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { ComponentProps } from "react";
+import { Pressable, StyleSheet } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { ComponentProps } from 'react'
 
-type IoniconName = ComponentProps<typeof Ionicons>["name"];
+type IoniconName = ComponentProps<typeof Ionicons>['name']
 
 type Props = {
-  name: IoniconName;
-  size?: number;
-  color?: string;
-  onPress: () => void;
-};
+  name: IoniconName
+  size?: number
+  color?: string
+  onPress: () => void
+}
 
-const IconButton = ({ name, size = 18, color = "#333", onPress }: Props) => {
+const IconButton = ({ name, size = 18, color = '#333', onPress }: Props) => {
   return (
     <Pressable
       onPress={onPress}
@@ -26,19 +20,19 @@ const IconButton = ({ name, size = 18, color = "#333", onPress }: Props) => {
     >
       <Ionicons name={name} size={size} color={color} />
     </Pressable>
-  );
-};
+  )
+}
 
-export default IconButton;
+export default IconButton
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 6,
     borderRadius: 20,
   },
   pressed: {
     opacity: 0.6,
   },
-});
+})

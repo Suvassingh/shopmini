@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
-import ProductItem from "./ProductItem";
-import {Product} from '../types/index'
+import { StyleSheet, View, FlatList } from 'react-native'
+import ProductItem from './ProductItem'
+import { Product } from '../types/index'
 type Props = {
-  product: Product[];
-};
-const ProductList = ({product}:Props) => {
+  product: Product[]
+}
+const ProductList = ({ product }: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -18,10 +17,10 @@ const ProductList = ({product}:Props) => {
         numColumns={2}
       />
     </View>
-  );
-};
+  )
+}
 
-export default ProductList;
+export default ProductList
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   columnWrapper: {
-    justifyContent: "space-between", 
-    gap: 10,  
+    justifyContent: 'space-between',
+    gap: 10,
   },
-});
+})
