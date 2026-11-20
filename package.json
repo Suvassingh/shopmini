@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@reduxjs/toolkit": "^2.15.0",
     "axios": "^1.21.1",
     "expo": "~56.0.24",
     "expo-constants": "~56.0.27",
@@ -20,7 +21,8 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.8.3"
+    "react-native-worklets": "0.8.3",
+    "react-redux": "^9.3.1"
   },
   "devDependencies": {
     "@expo/ngrok": "^4.1.3",

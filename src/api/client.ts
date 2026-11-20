@@ -39,4 +39,12 @@ export const api = {
     rawApi.get(url, config) as unknown as Promise<T>,
   post: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
     rawApi.post(url, data, config) as unknown as Promise<T>,
+  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
+    rawApi.put(url, data, config) as unknown as Promise<T>,
+
+  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
+    rawApi.patch(url, data, config) as unknown as Promise<T>,
+
+  delete: <T>(url: string, config?: AxiosRequestConfig) =>
+    rawApi.delete(url, config) as unknown as Promise<T>,
 }
