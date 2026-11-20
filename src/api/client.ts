@@ -1,9 +1,10 @@
 import { create, AxiosError, type AxiosRequestConfig } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 import { normalizeError } from '../api/error'
+import { baseUrl } from './Secret'
 
 export const rawApi = create({
-  baseURL: 'https://dummyjson.com',
+  baseURL: baseUrl,
   timeout: 10000,
 })
 
