@@ -4,14 +4,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProductList from "../components/ProductList";
 import { MOCK_PRODUCTS } from "../data/products";
-import { FavoritesContext } from "../../store/favorite-context";
-
+// import { FavoritesContext } from "../../store/favorite-context";
+import { useAppSelector } from "../../store/hooks";
+import { selectFavoriteIds } from "../../store/favouriteSlice";
 const FavouritesScreen = () => {
-  const favoritesCtx = useContext(FavoritesContext);
+  // const favoritesCtx = useContext(FavoritesContext);
+  const favoriteIds = useAppSelector(selectFavoriteIds);
 
   const favouriteProducts = useMemo(
-    () => MOCK_PRODUCTS.filter((pro) => favoritesCtx.ids.includes(pro.id)),
-    [favoritesCtx.ids],
+    () => MOCK_PRODUCTS.filter((pro) => favoriteIds.includes(pro.id)),
+    [favoriteIds],
   );
 
   const count = favouriteProducts.length;

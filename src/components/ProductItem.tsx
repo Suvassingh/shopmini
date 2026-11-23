@@ -1,31 +1,47 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
-import { useContext } from 'react'
-import { Product } from '../types'
-import { useRouter } from 'expo-router'
-import { FavoritesContext } from '../../store/favorite-context'
-import IconButton from './IconButton'
-const ProductItem = ({ id, title, price, image, category, rating }: Product) => {
-  const favoritesCtx = useContext(FavoritesContext)
-  const favoritesItem = favoritesCtx.ids.includes(id)
-  const router = useRouter()
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { useContext } from "react";
+import { Product } from "../types";
+import { useRouter } from "expo-router";
+// import { FavoritesContext } from '../../store/favorite-context'
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { toggleFavorite, selectIsFavorite } from "../../store/favouriteSlice";
+import IconButton from "./IconButton";
+const ProductItem = ({
+  id,
+  title,
+  price,
+  image,
+  category,
+  rating,
+}: Product) => {
+  // const favoritesCtx = useContext(FavoritesContext)
+  // const favoritesItem = favoritesCtx.ids.includes(id)
+  const isFav = useAppSelector(selectIsFavorite(id));
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   function favoritesHandler() {
-    if (favoritesItem) {
-      favoritesCtx.removeFavorite(id)
-    } else {
-      favoritesCtx.addFavorite(id)
-    }
+    // if (favoritesItem) {
+    //   favoritesCtx.removeFavorite(id)
+    // } else {
+    //   favoritesCtx.addFavorite(id)
+    // }
+    dispatch(toggleFavorite(id));
   }
   return (
     <View style={styles.card}>
-      <Pressable onPress={() => router.push({ pathname: '/details', params: { id: String(id) } })}>
+      <Pressable
+        onPress={() =>
+          router.push({ pathname: "/details", params: { id: String(id) } })
+        }
+      >
         <View style={styles.imageContainer}>
           <Image style={styles.image} source={{ uri: `${image}` }} />
 
           <View style={styles.favButton}>
             <IconButton
-              name={favoritesItem ? 'heart' : 'heart-outline'}
+              name={isFav ? "heart" : "heart-outline"}
               size={18}
-              color={favoritesItem ? 'red' : '#333'}
+              color={isFav ? "red" : "#333"}
               onPress={favoritesHandler}
             />
           </View>
@@ -44,45 +60,45 @@ const ProductItem = ({ id, title, price, image, category, rating }: Product) => 
         </View>
       </Pressable>
     </View>
-  )
-}
+  );
+};
 
-export default ProductItem
+export default ProductItem;
 
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
+    flexDirection: "column",
+    backgroundColor: "white",
     borderRadius: 12,
     padding: 10,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   imageContainer: {
-    position: 'relative',
-    width: '100%',
+    position: "relative",
+    width: "100%",
     marginBottom: 8,
   },
   image: {
     height: 120,
-    width: '100%',
+    width: "100%",
     borderRadius: 8,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     marginBottom: 8,
   },
   favButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 6,
     right: 6,
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
     padding: 6,
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -91,34 +107,34 @@ const styles = StyleSheet.create({
   info: {
     flex: 1,
     minWidth: 0,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   title: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     flexShrink: 1,
   },
   category: {
     fontSize: 11,
-    color: 'gray',
+    color: "gray",
     marginTop: 2,
     marginBottom: 8,
   },
   bottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 'auto',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    marginTop: "auto",
   },
   price: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: 'green',
+    fontWeight: "bold",
+    color: "green",
   },
   rating: {
     fontSize: 12,
-    color: '#555',
+    color: "#555",
   },
-})
+});

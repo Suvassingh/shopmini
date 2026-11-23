@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
-import FavoritesContextProvider from "../../store/favorite-context";
-
+// import FavoritesContextProvider from "../../store/favorite-context";
+import { Provider } from "react-redux";
+import { store } from "../../store";
 export default function RootLayout() {
   return (
-    <FavoritesContextProvider>
+    <Provider store={store}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -15,6 +16,6 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-    </FavoritesContextProvider>
+    </Provider>
   );
 }
