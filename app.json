@@ -16,7 +16,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.suvas8.ShopMini"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -24,8 +25,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-status-bar",
-      "expo-secure-store"
-    ]
+      "expo-status-bar"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f72e5b4c-d2d3-4c8b-80b2-3b41c5d39e84"
+      }
+    }
   }
 }
