@@ -3,12 +3,12 @@ import * as SecureStore from 'expo-secure-store'
 import { normalizeError } from '../api/error'
 import { baseUrl } from './Secret'
 
-export const rawApi = create({
+export const api = create({
   baseURL: baseUrl,
   timeout: 10000,
 })
 
-rawApi.interceptors.request.use(
+api.interceptors.request.use(
   async config => {
     config.headers.set('X-Request-Time', new Date().toISOString())
     config.headers.set('X-Client', 'android-app')
@@ -23,7 +23,7 @@ rawApi.interceptors.request.use(
   error => Promise.reject(error),
 )
 
-rawApi.interceptors.response.use(
+api.interceptors.response.use(
   response => response.data,
   async (error: AxiosError) => {
     const normalized = normalizeError(error)
@@ -34,17 +34,17 @@ rawApi.interceptors.response.use(
     throw normalized
   },
 )
-export const api = {
+export const http = {
   get: <T>(url: string, config?: AxiosRequestConfig) =>
-    rawApi.get(url, config) as unknown as Promise<T>,
+    api.get(url, config) as unknown as Promise<T>,
   post: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
-    rawApi.post(url, data, config) as unknown as Promise<T>,
+    api.post(url, data, config) as unknown as Promise<T>,
   put: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
-    rawApi.put(url, data, config) as unknown as Promise<T>,
+    api.put(url, data, config) as unknown as Promise<T>,
 
   patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) =>
-    rawApi.patch(url, data, config) as unknown as Promise<T>,
+    api.patch(url, data, config) as unknown as Promise<T>,
 
   delete: <T>(url: string, config?: AxiosRequestConfig) =>
-    rawApi.delete(url, config) as unknown as Promise<T>,
+    api.delete(url, config) as unknown as Promise<T>,
 }

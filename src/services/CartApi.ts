@@ -1,4 +1,4 @@
-import { api } from '../api/client'
+import { http } from '../api/client'
 
 export interface CartLine {
   productId: number
@@ -16,11 +16,11 @@ export interface AddToCartRequest {
   quantity: number
 }
 export async function getCart(): Promise<Cart> {
-  return api.get<Cart>('/cart')
+  return http.get<Cart>('/cart')
 }
 export async function addToCart(body: AddToCartRequest): Promise<Cart> {
-  return api.post<Cart>('/cart/add', body)
+  return http.post<Cart>('/cart/add', body)
 }
 export async function removeFromCart(productId: number): Promise<Cart> {
-  return api.delete<Cart>(`/cart/remove/${productId}`)
+  return http.delete<Cart>(`/cart/remove/${productId}`)
 }
