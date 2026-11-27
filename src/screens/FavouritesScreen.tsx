@@ -1,25 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useContext, useMemo } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ProductList from "../components/ProductList";
-import { MOCK_PRODUCTS } from "../data/products";
+import { StyleSheet, Text, View } from 'react-native'
+import { useContext, useMemo } from 'react'
+import { Ionicons } from '@expo/vector-icons'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import ProductList from '../components/ProductList'
+import { MOCK_PRODUCTS } from '../data/products'
 // import { FavoritesContext } from "../../store/favorite-context";
-import { useAppSelector } from "../../store/hooks";
-import { selectFavoriteIds } from "../../store/favouriteSlice";
+import { useAppSelector } from '../../store/hooks'
+import { selectFavoriteIds } from '../../store/favouriteSlice'
 const FavouritesScreen = () => {
   // const favoritesCtx = useContext(FavoritesContext);
-  const favoriteIds = useAppSelector(selectFavoriteIds);
+  const favoriteIds = useAppSelector(selectFavoriteIds)
 
   const favouriteProducts = useMemo(
-    () => MOCK_PRODUCTS.filter((pro) => favoriteIds.includes(pro.id)),
+    () => MOCK_PRODUCTS.filter(pro => favoriteIds.includes(pro.id)),
     [favoriteIds],
-  );
+  )
 
-  const count = favouriteProducts.length;
+  const count = favouriteProducts.length
 
   return (
-    <SafeAreaView style={styles.rootContainer} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.rootContainer} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <Text style={styles.heading}>Favourites</Text>
         <View style={styles.countBadge}>
@@ -30,7 +30,7 @@ const FavouritesScreen = () => {
 
       {count > 0 && (
         <Text style={styles.subHeading}>
-          {count} {count === 1 ? "item" : "items"} saved
+          {count} {count === 1 ? 'item' : 'items'} saved
         </Text>
       )}
 
@@ -48,53 +48,53 @@ const FavouritesScreen = () => {
         <ProductList product={favouriteProducts} />
       )}
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default FavouritesScreen;
+export default FavouritesScreen
 
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 10,
     marginHorizontal: 10,
   },
   heading: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#111",
+    fontWeight: 'bold',
+    color: '#111',
   },
   countBadge: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 4,
-    backgroundColor: "#c5fdec",
+    backgroundColor: '#c5fdec',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
   },
   countText: {
     fontSize: 14,
-    fontWeight: "700",
-    color: "#0ac526",
+    fontWeight: '700',
+    color: '#0ac526',
   },
   subHeading: {
     marginTop: 4,
     marginHorizontal: 10,
     fontSize: 13,
-    color: "gray",
+    color: 'gray',
   },
   emptyContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 40,
     paddingBottom: 60,
   },
@@ -102,21 +102,21 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 55,
-    backgroundColor: "#e8fdf3",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#e8fdf3',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: "700",
-    color: "#111",
+    fontWeight: '700',
+    color: '#111',
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: "gray",
-    textAlign: "center",
+    color: 'gray',
+    textAlign: 'center',
     lineHeight: 20,
   },
-});
+})

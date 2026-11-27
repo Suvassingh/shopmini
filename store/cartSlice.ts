@@ -1,125 +1,69 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createAppAsyncThunk } from "./withType";
-import {
-  getCart,
-  addToCart as addToCartApi,
-  removeFromCart as removeFromCartApi,
-  type Cart,
-  type AddToCartRequest,
-} from "../src/services/CartApi";
-import type { RootState } from "./index";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { RootState } from './index'
+import type { CartLine } from '../src/types/cart'
 
 type CartState = {
-  data: Cart | null;
-  loading: boolean;
-  error: string | null;
-};
+  lines: CartLine[]
+  loading: boolean
+  error: string | null
+  hydrated: boolean
+}
 
 const initialState: CartState = {
-  data: null,
+  lines: [],
   loading: false,
   error: null,
-};
-
-export const fetchCart = createAppAsyncThunk(
-  "cart/fetch",
-  async (_, { rejectWithValue }) => {
-    try {
-      return await getCart();
-    } catch (e) {
-      return rejectWithValue(
-        e instanceof Error ? e.message : "Failed to load cart",
-      );
-    }
-  },
-);
-
-export const addToCart = createAppAsyncThunk(
-  "cart/add",
-  async (body: AddToCartRequest, { rejectWithValue }) => {
-    try {
-      return await addToCartApi(body);
-    } catch (e) {
-      return rejectWithValue(
-        e instanceof Error ? e.message : "Failed to add to cart",
-      );
-    }
-  },
-);
-
-export const removeFromCart = createAppAsyncThunk(
-  "cart/remove",
-  async (productId: number, { rejectWithValue }) => {
-    try {
-      return await removeFromCartApi(productId);
-    } catch (e) {
-      return rejectWithValue(
-        e instanceof Error ? e.message : "Failed to remove item",
-      );
-    }
-  },
-);
+  hydrated: false,
+}
 
 const cartSlice = createSlice({
-  name: "cart",
+  name: 'cart',
   initialState,
   reducers: {
-    clearCartError(state) {
-      state.error = null;
+    addToCart(state, action: PayloadAction<{ product: CartLine['product']; quantity?: number }>) {
+      const { product, quantity = 1 } = action.payload
+      const existing = state.lines.find(l => l.product.id === product.id)
+      if (existing) existing.quantity += quantity
+      else state.lines.push({ product, quantity })
+      state.lines = state.lines.filter(l => l.quantity > 0)
+    },
+
+    removeFromCart(state, action: PayloadAction<number>) {
+      state.lines = state.lines.filter(l => l.product.id !== action.payload)
+    },
+
+    setQuantity(state, action: PayloadAction<{ productId: number; quantity: number }>) {
+      const line = state.lines.find(l => l.product.id === action.payload.productId)
+      if (!line) return
+      if (action.payload.quantity <= 0) {
+        state.lines = state.lines.filter(l => l.product.id !== action.payload.productId)
+      } else {
+        line.quantity = action.payload.quantity
+      }
+    },
+
+    clearCart(state) {
+      state.lines = []
+    },
+
+    hydrateCart(state, action: PayloadAction<CartLine[]>) {
+      state.lines = action.payload
+      state.hydrated = true
     },
   },
-  extraReducers: (builder) => {
-    builder
-      // fetchCart
-      .addCase(fetchCart.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchCart.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchCart.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload ?? action.error.message ?? "Something went wrong";
-      })
-      // addToCart
-      .addCase(addToCart.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(addToCart.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(addToCart.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload ?? action.error.message ?? "Something went wrong";
-      })
-      // removeFromCart
-      .addCase(removeFromCart.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(removeFromCart.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(removeFromCart.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload ?? action.error.message ?? "Something went wrong";
-      });
-  },
-});
+})
 
-export const { clearCartError } = cartSlice.actions;
-export default cartSlice.reducer;
+export const { addToCart, removeFromCart, setQuantity, clearCart, hydrateCart } = cartSlice.actions
 
-export const selectCart = (state: RootState) => state.cart.data;
-export const selectCartLoading = (state: RootState) => state.cart.loading;
-export const selectCartError = (state: RootState) => state.cart.error;
+export default cartSlice.reducer
+
+export const selectCartLines = (state: RootState) => state.cart.lines
+export const selectCartLoading = (state: RootState) => state.cart.loading
+export const selectCartError = (state: RootState) => state.cart.error
+export const selectCartIsEmpty = (state: RootState) => state.cart.lines.length === 0
+export const selectCartTotal = (state: RootState) =>
+  state.cart.lines.reduce((s, l) => s + l.product.price * l.quantity, 0)
 export const selectCartItemCount = (state: RootState) =>
-  state.cart.data?.lines.reduce((sum, l) => sum + l.quantity, 0) ?? 0;
+  state.cart.lines.reduce((s, l) => s + l.quantity, 0)
+export const selectCartQuantity = (productId: number) => (state: RootState) =>
+  state.cart.lines.find(l => l.product.id === productId)?.quantity ?? 0
