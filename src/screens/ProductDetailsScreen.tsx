@@ -80,7 +80,7 @@ const ProductDetailsScreen = () => {
         <View>
           <Text style={styles.totalLabel}>
             Total {inCartQty > 0 ? `(${inCartQty} in cart)` : ''}
-          </Text>{' '}
+          </Text>
           <Text style={styles.totalValue}>${product.price}</Text>
         </View>
         <View style={styles.buttonWrapper}>
